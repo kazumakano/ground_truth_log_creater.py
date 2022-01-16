@@ -1,5 +1,5 @@
 # ground_truth_log_creater.py
-This is Python module to interpolate ground truth and convert logs format to CSV and pickle able to be interpreted by [particle_filter.py](https://github.com/kazumakano/particle_filter.py).
+This is Python module to interpolate ground truth position and convert logs format to CSV and pickle able to be interpreted by [particle_filter.py](https://github.com/kazumakano/particle_filter.py).
 
 # Usage
 You can run this creater as following.
