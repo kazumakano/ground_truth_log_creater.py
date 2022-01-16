@@ -48,21 +48,22 @@ def _convert2datetime(ts: np.ndarray) -> np.ndarray:
     return ts.astype(datetime)
 
 def _create_log(src_file: str, tgt_dir: str) -> None:
-    resampled_pos, resampled_ts = _resample_log(_load_log(src_file))
-    resampled_ts = _convert2datetime(resampled_ts)
+    data = _load_log(src_file)
+    pos, ts = (data[:, 1:], data[:, 0]) if FREQ == 0 else _resample_log(data)
+    ts = _convert2datetime(ts)
 
     tgt_file = path.join(tgt_dir, path.basename(src_file)[:-4] + ".csv")
     with open(tgt_file, mode="w", newline="") as f:
         writer = csv.writer(f)
         t: datetime
-        for i, t in enumerate(resampled_ts):
-            writer.writerow((t.strftime("%Y-%m-%d %H:%M:%S.%f"), *resampled_pos[i]))
+        for i, t in enumerate(ts):
+            writer.writerow((t.strftime("%Y-%m-%d %H:%M:%S.%f"), *pos[i]))
 
     print(f"written to {path.basename(tgt_file)}")
 
     tgt_file = path.join(tgt_dir, path.basename(src_file)[:-4] + ".pkl")
     with open(tgt_file, mode="wb") as f:
-        pickle.dump((resampled_ts, resampled_pos), f)
+        pickle.dump((ts, pos), f)
     
     print(f"written to {path.basename(tgt_file)}")
 
