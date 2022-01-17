@@ -2,7 +2,6 @@ import csv
 import os.path as path
 import pickle
 from datetime import datetime
-from glob import iglob
 from typing import Any, Union
 import numpy as np
 import yaml
@@ -47,7 +46,10 @@ def _convert2datetime(ts: np.ndarray) -> np.ndarray:
 
     return ts.astype(datetime)
 
-def _create_log(src_file: str, tgt_dir: str) -> None:
+def create_log(src_file: str, tgt_dir: Union[str, None]) -> None:
+    if tgt_dir is None:
+        tgt_dir = path.join(ROOT_DIR, "formatted/")
+
     data = _load_log(src_file)
     pos, ts = (data[:, 1:], data[:, 0]) if FREQ == 0 else _resample_log(data)
     ts = _convert2datetime(ts)
@@ -67,34 +69,15 @@ def _create_log(src_file: str, tgt_dir: str) -> None:
     
     print(f"written to {path.basename(tgt_file)}")
 
-def create_logs(src_file: Union[str, None] = None, src_dir: Union[str, None] = None, tgt_dir: Union[str, None] = None) -> None:
-    if tgt_dir is None:
-        tgt_dir = path.join(ROOT_DIR, "formatted/")    # save to default target directory
-
-    if src_file is None and src_dir is None:
-        for src_file in iglob(path.join(ROOT_DIR, "raw/*.csv")):    # loop for default source directory
-            _create_log(src_file, tgt_dir)
-
-    elif src_file is None:
-        for src_file in iglob(src_dir):    # loop for specified source directory
-            _create_log(src_file, tgt_dir)
-
-    elif src_dir is None:
-        _create_log(src_file, tgt_dir)
-
-    else:
-        raise Exception("'src_file' and 'src_dir' are specified at the same time")
-
 if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser()
     parser.add_argument("-c", "--conf_file", help="specify config file", metavar="PATH_TO_CONF_FILE")
-    parser.add_argument("--src_file", help="specify source file", metavar="PATH_TO_SRC_FILE")
-    parser.add_argument("--src_dir", help="specify source directory", metavar="PATH_TO_SRC_DIR")
-    parser.add_argument("--tgt_dir", help="specify target directory", metavar="PATH_TO_TGT_DIR")
+    parser.add_argument("-s", "--src_file", required=True, help="specify source file", metavar="PATH_TO_SRC_FILE")
+    parser.add_argument("-t", "--tgt_dir", help="specify target directory", metavar="PATH_TO_TGT_DIR")
     args = parser.parse_args()
 
     _set_params(args.conf_file)
 
-    create_logs(args.src_file, args.src_dir, args.tgt_dir)
+    create_log(args.src_file, args.tgt_dir)
