@@ -20,10 +20,10 @@ def _set_params(conf_file: str) -> None:
     with open(conf_file) as f:
         conf: dict[str, Any] = yaml.safe_load(f)
     BEGIN = datetime.strptime(conf["begin"], "%Y-%m-%d %H:%M:%S")
-    FREQ = np.float16(conf["freq"])
+    FREQ = np.float32(conf["freq"])
 
 def _load_log(file: str) -> np.ndarray:
-    data = np.loadtxt(file, dtype=np.float16, delimiter=",")
+    data = np.loadtxt(file, dtype=np.float32, delimiter=",")
     print(f"{path.basename(file)} has been loaded")
 
     return data
