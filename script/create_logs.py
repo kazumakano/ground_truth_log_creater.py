@@ -37,7 +37,7 @@ def _resample_log(data: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
 
     return resampled_pos, resampled_ts
 
-def _convert2datetime(ts: np.ndarray) -> np.ndarray:
+def _conv2datetime(ts: np.ndarray) -> np.ndarray:
     ts = ts.astype(object)
 
     offset = BEGIN - datetime.fromtimestamp(ts[0])
@@ -52,7 +52,7 @@ def create_log(src_file: str, tgt_dir: Union[str, None]) -> None:
 
     data = _load_log(src_file)
     pos, ts = (data[:, 1:], data[:, 0]) if FREQ == 0 else _resample_log(data)
-    ts = _convert2datetime(ts)
+    ts = _conv2datetime(ts)
 
     tgt_file = path.join(tgt_dir, path.basename(src_file)[:-4] + ".csv")
     with open(tgt_file, mode="w", newline="") as f:
