@@ -31,7 +31,7 @@ def _load_log(file: str) -> np.ndarray:
 def _resample_log(data: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
     resampled_ts = np.arange(data[0, 0], data[-1, 0] + 1/FREQ, step=1/FREQ, dtype=np.float64)
 
-    resampled_pos = np.empty((len(resampled_ts), 2), dtype=np.float64)
+    resampled_pos = np.empty((len(resampled_ts), 2), dtype=np.float32)
     for i in range(2):
         resampled_pos[:, i] = interp1d(data[:, 0], data[:, i+1])(resampled_ts)
 
