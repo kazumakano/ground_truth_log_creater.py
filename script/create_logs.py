@@ -1,14 +1,15 @@
+from __future__ import annotations
 import csv
 import os.path as path
 import pickle
 from datetime import datetime
-from typing import Any, Union
+from typing import Any, Optional
 import numpy as np
 import yaml
 from scipy.interpolate import interp1d
 
 
-def _set_params(conf_file: str) -> None:
+def _set_params(conf_file: str | None) -> None:
     global ROOT_DIR, BEGIN, FREQ
 
     ROOT_DIR = path.join(path.dirname(__file__), "../")
@@ -46,7 +47,7 @@ def _conv2datetime(ts: np.ndarray) -> np.ndarray:
 
     return ts.astype(datetime)
 
-def create_log(src_file: str, tgt_dir: Union[str, None]) -> None:
+def create_log(src_file: str, tgt_dir: Optional[str] = None) -> None:
     if tgt_dir is None:
         tgt_dir = path.join(ROOT_DIR, "formatted/")
 
