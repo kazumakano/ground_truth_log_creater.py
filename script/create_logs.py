@@ -55,7 +55,7 @@ def create_log(src_file: str, tgt_dir: Optional[str] = None) -> None:
     pos, ts = (data[:, 1:], data[:, 0]) if FREQ == 0 else _resample_log(data)
     ts = _conv2datetime(ts)
 
-    tgt_file = path.join(tgt_dir, path.basename(src_file)[:-4] + ".csv")
+    tgt_file = path.join(tgt_dir, path.splitext(path.basename(src_file))[0] + ".csv")
     with open(tgt_file, mode="w", newline="") as f:
         writer = csv.writer(f)
         t: datetime
@@ -64,7 +64,7 @@ def create_log(src_file: str, tgt_dir: Optional[str] = None) -> None:
 
     print(f"written to {path.basename(tgt_file)}")
 
-    tgt_file = path.join(tgt_dir, path.basename(src_file)[:-4] + ".pkl")
+    tgt_file = path.join(tgt_dir, path.splitext(path.basename(src_file))[0] + ".pkl")
     with open(tgt_file, mode="wb") as f:
         pickle.dump((ts, pos), f)
     
